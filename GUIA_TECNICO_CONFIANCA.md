@@ -105,21 +105,25 @@ Para remover um técnico da lista de confiáveis ou ver quem está autorizado:
 O RustDesk salva as informações dos técnicos confiáveis localmente:
 
 **Linux:**
+
 ```bash
 ~/.config/rustdesk/config.toml
 ```
 
 **Windows:**
+
 ```
 C:\Users\{SEU_USUARIO}\AppData\Roaming\RustDesk\config.toml
 ```
 
 **macOS:**
+
 ```bash
 ~/Library/Application Support/rustdesk/config.toml
 ```
 
 ### Dados Armazenados:
+
 ```toml
 trusted_technicians_list = ["peer_id_123", "peer_id_456"]
 trusted_tech_peer_id_123_name = "João - Técnico"
@@ -131,29 +135,34 @@ trusted_tech_peer_id_123_timestamp = "2026-04-04T15:30:00.000000Z"
 ## ✅ Arquivos Implementados
 
 ### Novo Modelo
+
 - **`flutter/lib/models/trusted_technician_model.dart`**
   - Gerencia lista de técnicos confiáveis
   - Salva/carrega do armazenamento local
   - Verifica se técnico é confiável
 
 ### Widget de Gerenciamento
+
 - **`flutter/lib/desktop/widgets/trusted_technicians_widget.dart`**
   - Exibe lista visual de técnicos
   - Permite remover individual ou em lote
   - Mostra data de autorização
 
 ### Integração no Servidor
+
 - **`flutter/lib/models/server_model.dart`**
   - Auto-aprovação automática
   - Integração com TrustedTechnicianModel
   - Armazenamento de intenção de lembrar
 
 ### Interface de Desktop
+
 - **`flutter/lib/desktop/pages/server_page.dart`**
   - Checkbox "Lembrar deste técnico" no diálogo de conexão
   - Integração com modelo
 
 ### Tradução
+
 - **`src/lang/ptbr.rs`** - Português Brasileiro
 - **`src/lang/en.rs`** - English
 
@@ -356,16 +365,19 @@ Esta funcionalidade demonstra:
 Se tiver problemas:
 
 1. **Verificar se instalou corretamente**
+
    ```bash
    dpkg -l | grep rustdesk
    ```
 
 2. **Verificar logs**
+
    ```bash
    tail -f ~/.config/rustdesk/config.toml
    ```
 
 3. **Recompilar se necessário**
+
    ```bash
    python3 build.py --flutter --release
    ```
@@ -382,6 +394,7 @@ Se tiver problemas:
 ### Principais Funções
 
 **Modelo de Dados:**
+
 ```dart
 // flutter/lib/models/trusted_technician_model.dart
 class TrustedTechnicianModel {
@@ -393,6 +406,7 @@ class TrustedTechnicianModel {
 ```
 
 **Integração no Servidor:**
+
 ```dart
 // flutter/lib/models/server_model.dart
 void showLoginDialog(Client client) {
@@ -405,6 +419,7 @@ void showLoginDialog(Client client) {
 ```
 
 **UI do Diálogo:**
+
 ```dart
 // flutter/lib/desktop/pages/server_page.dart
 CheckboxListTile(
@@ -425,7 +440,7 @@ Você tem uma funcionalidade **profissional** e **segura** de acesso automático
 ✅ Mantém segurança via fingerprinting  
 ✅ Permite revogação de acesso facilmente  
 ✅ Funciona 100% em background  
-✅ Sem nenhum modal informativo  
+✅ Sem nenhum modal informativo
 
 **Tudo já pronto para usar!** 🎉
 
@@ -447,4 +462,3 @@ Status: **✅ COMPLETO E FUNCIONAL**
 ---
 
 **Aproveite a funcionalidade! 🚀**
-

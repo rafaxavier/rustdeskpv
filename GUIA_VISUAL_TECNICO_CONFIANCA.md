@@ -147,12 +147,12 @@ Diretamente:
 
 ```
 Sistema:
-1. João conecta → 
-2. Sistema verifica "é técnico confiável?" → 
-3. ✅ SIM → 
-4. Auto-aprova imediatamente → 
-5. Nenhum diálogo → 
-6. App fica em background → 
+1. João conecta →
+2. Sistema verifica "é técnico confiável?" →
+3. ✅ SIM →
+4. Auto-aprova imediatamente →
+5. Nenhum diálogo →
+6. App fica em background →
 7. João consegue acessar
 
 ⏱️ Tempo total: < 1 segundo
@@ -241,7 +241,7 @@ Sistema:
    ↓
 4. João removido da lista
    ↓
-5. Próxima conexão de João: 
+5. Próxima conexão de João:
    → Diálogo aparecerá novamente
    → Precisará clicar "Accept" manualmente
 ```
@@ -253,14 +253,14 @@ Sistema:
 ```
 1. Clique em [Clear All Trusted Technicians]
    ↓
-2. Confirmação: "Tem certeza que deseja remover 
+2. Confirmação: "Tem certeza que deseja remover
    todos os técnicos confiáveis?"
    ↓
 3. Clique "Sim" ou "Confirmar"
    ↓
 4. ✅ Todos removidos
    ↓
-5. Próximas conexões: 
+5. Próximas conexões:
    → Todos precisarão confirmar manualmente novamente
 ```
 
@@ -435,11 +435,12 @@ Resultado:
 ## 🚀 Dicas Profissionais
 
 ### ✨ Melhor Prática 1: Nomes Descritivos
+
 ```
 ❌ Ruim:
    client_1
    remote_user
-   
+
 ✅ Bom:
    João - TechSupport
    Maria - IT Specialist - São Paulo
@@ -447,6 +448,7 @@ Resultado:
 ```
 
 ### ✨ Melhor Prática 2: Revisa Periódica
+
 ```
 Recomendação:
 ├─ Mensal: Verifique lista
@@ -456,6 +458,7 @@ Recomendação:
 ```
 
 ### ✨ Melhor Prática 3: Combinação de Segurança
+
 ```
 ✅ Use em conjunto com:
 ├─ Senha permanente forte
@@ -466,6 +469,7 @@ Recomendação:
 ```
 
 ### ✨ Melhor Prática 4: Testes
+
 ```
 Sempre teste:
 1. Primeira conexão: Diálogo aparece? ✓
@@ -483,6 +487,7 @@ Sempre teste:
 **Possível causa:** Técnico já está na lista confiável
 
 **Solução:**
+
 1. Abra Settings → Trusted Technicians
 2. Procure pelo técnico
 3. Clique "Remove"
@@ -493,6 +498,7 @@ Sempre teste:
 **Possível causa:** Checkbox não foi marcado
 
 **Solução:**
+
 1. Na próxima conexão do técnico
 2. Marque o checkbox
 3. Clique "Accept"
@@ -502,6 +508,7 @@ Sempre teste:
 **Possível causa:** Versão antiga do RustDesk
 
 **Solução:**
+
 1. Atualize para versão mais recente
 2. Ou recompile o projeto
 
@@ -510,6 +517,7 @@ Sempre teste:
 **Possível causa:** Settings de minimização desabilitadas
 
 **Solução:**
+
 1. Verifique se auto-minimize está habilitada
 2. Ou minimize manualmente
 
@@ -517,14 +525,14 @@ Sempre teste:
 
 ## 📞 Support Rápido
 
-| Pergunta | Resposta |
-|----------|----------|
-| **Posso ter múltiplos técnicos?** | ✅ Sim, quantos precisar |
-| **Posso remover individual?** | ✅ Sim, clique X ao lado do nome |
-| **Posso remover todos de uma vez?** | ✅ Sim, "Clear All" |
-| **Um técnico removido consegue conectar novamente?** | ✅ Sim, com diálogo |
-| **Muda a senha permanente?** | ❌ Não, independente |
-| **Funciona em mobile?** | ❌ Não, apenas desktop |
+| Pergunta                                             | Resposta                         |
+| ---------------------------------------------------- | -------------------------------- |
+| **Posso ter múltiplos técnicos?**                    | ✅ Sim, quantos precisar         |
+| **Posso remover individual?**                        | ✅ Sim, clique X ao lado do nome |
+| **Posso remover todos de uma vez?**                  | ✅ Sim, "Clear All"              |
+| **Um técnico removido consegue conectar novamente?** | ✅ Sim, com diálogo              |
+| **Muda a senha permanente?**                         | ❌ Não, independente             |
+| **Funciona em mobile?**                              | ❌ Não, apenas desktop           |
 
 ---
 

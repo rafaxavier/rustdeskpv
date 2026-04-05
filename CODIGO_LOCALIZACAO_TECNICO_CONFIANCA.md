@@ -15,7 +15,7 @@ class TrustedTechnicianModel {
   // 📌 Constantes de armazenamento
   static const String kTrustedTechniciansListKey = 'trusted_technicians_list';
   static const String kTrustedTechNamePrefix = 'trusted_tech_';
-  
+
   // 📌 Funções principais
   void loadTrustedTechnicians()                    // Carregar do storage
   Future<void> addTrustedTechnician(...)           // Adicionar à lista
@@ -27,7 +27,8 @@ class TrustedTechnicianModel {
 }
 ```
 
-**Linha chave:** 
+**Linha chave:**
+
 - Linha 32-52: Carregamento de dados
 - Linha 69-80: Adicionar técnico
 - Linha 111: Verificação de técnico confiável
@@ -39,21 +40,25 @@ class TrustedTechnicianModel {
 **Arquivo:** `flutter/lib/models/server_model.dart`
 
 #### Inicialização (Linha 53)
+
 ```dart
 final _trustedTechnicianModel = TrustedTechnicianModel();
 ```
 
 #### Getter (Linha 92)
+
 ```dart
 TrustedTechnicianModel get trustedTechnicianModel => _trustedTechnicianModel;
 ```
 
 #### Carregamento (Linha 147)
+
 ```dart
 _trustedTechnicianModel.loadTrustedTechnicians();
 ```
 
 #### 🔑 FUNÇÃO CRÍTICA: Auto-Aprovação (Linha ~615)
+
 ```dart
 void showLoginDialog(Client client) {
   // ⭐ VERIFICAÇÃO DO TÉCNICO CONFIÁVEL
@@ -63,18 +68,19 @@ void showLoginDialog(Client client) {
     sendLoginResponse(client, true);
     return;  // ⭐ NÃO MOSTRA DIÁLOGO
   }
-  
+
   // Caso contrário, mostra diálogo normal
   showClientDialog(...);
 }
 ```
 
 #### Salvar Técnico Confiável (Linha ~717)
+
 ```dart
 void sendLoginResponse(Client client, bool res) async {
   if (res) {
     // ... código ...
-    
+
     // Se usuário marcou checkbox para lembrar
     if (_rememberTechnicianFlags[client.peerId] == true) {
       await _trustedTechnicianModel.addTrustedTechnician(
@@ -89,6 +95,7 @@ void sendLoginResponse(Client client, bool res) async {
 ```
 
 #### Helper Functions (Linha ~737)
+
 ```dart
 void setRememberTechnician(String peerId, bool remember) {
   _rememberTechnicianFlags[peerId] = remember;  // Marca intenção
@@ -106,11 +113,13 @@ bool shouldRememberTechnician(String peerId) {
 **Arquivo:** `flutter/lib/desktop/pages/server_page.dart`
 
 #### Função de Construção (Linha 1023)
+
 ```dart
 buildUnAuthorized(BuildContext context) {
 ```
 
 #### Checkbox "Lembrar Técnico" (Linha ~1056-1077)
+
 ```dart
 Obx(() => Padding(
   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -132,6 +141,7 @@ Obx(() => Padding(
 ```
 
 #### Botão "Accept" com Integração (Linha ~1082-1095)
+
 ```dart
 buildButton(
   context,
@@ -156,6 +166,7 @@ buildButton(
 **Arquivo:** `flutter/lib/desktop/widgets/trusted_technicians_widget.dart`
 
 #### Classe Widget (Linha 12)
+
 ```dart
 class TrustedTechniciansWidget extends StatefulWidget {
   const TrustedTechniciansWidget({Key? key, this.onTechniciansChanged});
@@ -163,15 +174,16 @@ class TrustedTechniciansWidget extends StatefulWidget {
 ```
 
 #### Renderização de Lista (Linha ~70+)
+
 ```dart
 Obx(() {
   final technicians = _model.trustedPeerIds;
-  
+
   if (technicians.isEmpty) {
     // Mostra mensagem "Nenhum técnico ainda"
     return /* empty state widget */;
   }
-  
+
   return ListView.builder(
     itemCount: technicians.length,
     itemBuilder: (context, index) {
@@ -190,6 +202,7 @@ Obx(() {
 ```
 
 #### Remover Técnico (Função privada)
+
 ```dart
 Future<void> _removeTechnician(String peerId) async {
   await _model.removeTrustedTechnician(peerId);
@@ -210,6 +223,7 @@ Future<void> _clearAll() async {
 ### 5. Traduções
 
 #### Português Brasileiro
+
 **Arquivo:** `src/lang/ptbr.rs` (Linha ~278-288)
 
 ```rust
@@ -225,6 +239,7 @@ Future<void> _clearAll() async {
 ```
 
 #### English
+
 **Arquivo:** `src/lang/en.rs` (Linha ~84-94)
 
 ```rust
@@ -354,7 +369,7 @@ Future<void> addTrustedTechnician({
   Map<String, dynamic>? permissions,  // ← NOVO
 }) async {
   // ... código existente ...
-  
+
   // ← ADICIONAR
   if (permissions != null) {
     await bind.mainSetLocalOption(
@@ -373,20 +388,20 @@ Future<void> addTrustedTechnician({
 // Verificar se expirou (exemplo: 90 dias)
 bool isTrustedTechnician(String peerId) {
   if (!trustedPeerIds.contains(peerId)) return false;
-  
+
   final timestamp = getTechnicianTimestamp(peerId);
   if (timestamp.isEmpty) return false;
-  
+
   final authDate = DateTime.parse(timestamp);
   final now = DateTime.now();
   final daysDiff = now.difference(authDate).inDays;
-  
+
   // Expirar após 90 dias
   if (daysDiff > 90) {
     removeTrustedTechnician(peerId);
     return false;
   }
-  
+
   return true;
 }
 ```
@@ -399,14 +414,14 @@ bool isTrustedTechnician(String peerId) {
 void showLoginDialog(Client client) {
   if (_trustedTechnicianModel.isTrustedTechnician(client.peerId)) {
     debugPrint('Auto-aprovando técnico confiável: ${client.name}');
-    
+
     // ← NOVO: Mostrar notificação
     parent.target?.invokeMethod("show_notification", {
       "title": "Conexão Remota",
       "message": "${client.name} conectou como técnico confiável",
       "timeout": 3000,
     });
-    
+
     sendLoginResponse(client, true);
     return;
   }
@@ -446,15 +461,15 @@ Estrutura em Disco (config.toml):
 
 ## 🚀 Linhas de Código Críticas
 
-| Função | Arquivo | Linha | O que faz |
-|--------|---------|-------|----------|
-| `loadTrustedTechnicians()` | trusted_technician_model.dart | 27 | Carrega lista do disco |
-| `isTrustedTechnician()` | trusted_technician_model.dart | 111 | **Verificação de auto-aprovação** |
-| `addTrustedTechnician()` | trusted_technician_model.dart | 69 | Salva técnico como confiável |
-| `showLoginDialog()` | server_model.dart | ~615 | **PONTO DE AUTO-APROVAÇÃO** |
-| `sendLoginResponse()` | server_model.dart | ~717 | Processa resposta e salva se marcado |
-| `CheckboxListTile` | server_page.dart | ~1059 | Renderiza checkbox na UI |
-| `setRememberTechnician()` | server_model.dart | ~737 | Marca intenção do usuário |
+| Função                     | Arquivo                       | Linha | O que faz                            |
+| -------------------------- | ----------------------------- | ----- | ------------------------------------ |
+| `loadTrustedTechnicians()` | trusted_technician_model.dart | 27    | Carrega lista do disco               |
+| `isTrustedTechnician()`    | trusted_technician_model.dart | 111   | **Verificação de auto-aprovação**    |
+| `addTrustedTechnician()`   | trusted_technician_model.dart | 69    | Salva técnico como confiável         |
+| `showLoginDialog()`        | server_model.dart             | ~615  | **PONTO DE AUTO-APROVAÇÃO**          |
+| `sendLoginResponse()`      | server_model.dart             | ~717  | Processa resposta e salva se marcado |
+| `CheckboxListTile`         | server_page.dart              | ~1059 | Renderiza checkbox na UI             |
+| `setRememberTechnician()`  | server_model.dart             | ~737  | Marca intenção do usuário            |
 
 ---
 
@@ -468,7 +483,7 @@ server_model.dart
     │   ├─→ buildUnAuthorized() usa checkbox
     │   └─→ Chama setRememberTechnician() do model
     └─→ Chama sendLoginResponse() que salva ao model
-    
+
 trusted_technicians_widget.dart
     ├─→ TrustedTechnicianModel (obtém via Provider)
     └─→ Renderiza lista de técnicos

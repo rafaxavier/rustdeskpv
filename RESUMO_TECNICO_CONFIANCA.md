@@ -6,20 +6,21 @@
 
 ## 🎯 O Que Você Pediu vs O Que Você Recebeu
 
-| Requisito | Status | Implementação |
-|-----------|--------|-----------------|
-| **Checkbox "Permitir acesso ao técnico"** | ✅ | `CheckboxListTile` no diálogo de conexão |
-| **Acesso SEM confirmação** | ✅ | `Auto-aprovação` automática para técnicos confiáveis |
-| **Sem modais informativos** | ✅ | `Silencioso` - apenas minimiza a janela |
-| **Roda em background** | ✅ | `windowManager.minimize()` automático |
-| **Acesso imediato** | ✅ | `sendLoginResponse(client, true)` instantâneo |
-| **Gerenciamento de técnicos** | ✅ | `TrustedTechniciansWidget` com remover/limpar |
+| Requisito                                 | Status | Implementação                                        |
+| ----------------------------------------- | ------ | ---------------------------------------------------- |
+| **Checkbox "Permitir acesso ao técnico"** | ✅     | `CheckboxListTile` no diálogo de conexão             |
+| **Acesso SEM confirmação**                | ✅     | `Auto-aprovação` automática para técnicos confiáveis |
+| **Sem modais informativos**               | ✅     | `Silencioso` - apenas minimiza a janela              |
+| **Roda em background**                    | ✅     | `windowManager.minimize()` automático                |
+| **Acesso imediato**                       | ✅     | `sendLoginResponse(client, true)` instantâneo        |
+| **Gerenciamento de técnicos**             | ✅     | `TrustedTechniciansWidget` com remover/limpar        |
 
 ---
 
 ## 🔄 Fluxo Simplificado
 
 ### 1️⃣ Primeira Conexão
+
 ```
 Técnico conecta
     ↓
@@ -35,6 +36,7 @@ Clique "Accept"
 ```
 
 ### 2️⃣ Próximas Conexões
+
 ```
 Técnico conecta
     ↓
@@ -98,13 +100,14 @@ src/lang/
 
 ## 💾 Dados Armazenados
 
-| Plataforma | Local |
-|-----------|-------|
-| Linux | `~/.config/rustdesk/config.toml` |
-| Windows | `%APPDATA%\RustDesk\config.toml` |
-| macOS | `~/Library/Application Support/rustdesk/config.toml` |
+| Plataforma | Local                                                |
+| ---------- | ---------------------------------------------------- |
+| Linux      | `~/.config/rustdesk/config.toml`                     |
+| Windows    | `%APPDATA%\RustDesk\config.toml`                     |
+| macOS      | `~/Library/Application Support/rustdesk/config.toml` |
 
 **Chaves:**
+
 - `trusted_technicians_list` = `[peer_id_1, peer_id_2, ...]`
 - `trusted_tech_{peer_id}_name` = Nome do técnico
 - `trusted_tech_{peer_id}_timestamp` = Data de autorização
@@ -117,21 +120,21 @@ src/lang/
 ✅ Permite **remover facilmente**  
 ✅ Não viola **senha permanente**  
 ✅ **Localmente** armazenado (não nuvem)  
-✅ Compatível com **2FA** do RustDesk  
+✅ Compatível com **2FA** do RustDesk
 
 ---
 
 ## ⚡ Funcionalidades Incluídas
 
-| Feature | Descrição |
-|---------|-----------|
-| **Auto-Aprovação** | Detecta técnico e aprova automaticamente |
-| **Armazenamento** | Persiste entre reinicializações |
-| **Remoção** | Remove técnico da lista quando desejar |
-| **Múltiplos** | Suporta vários técnicos confiáveis |
-| **Timestamp** | Registra quando foi autorizado |
-| **Nome Customizado** | Armazena nome do técnico |
-| **UI Clara** | Interface visual de gerenciamento |
+| Feature              | Descrição                                |
+| -------------------- | ---------------------------------------- |
+| **Auto-Aprovação**   | Detecta técnico e aprova automaticamente |
+| **Armazenamento**    | Persiste entre reinicializações          |
+| **Remoção**          | Remove técnico da lista quando desejar   |
+| **Múltiplos**        | Suporta vários técnicos confiáveis       |
+| **Timestamp**        | Registra quando foi autorizado           |
+| **Nome Customizado** | Armazena nome do técnico                 |
+| **UI Clara**         | Interface visual de gerenciamento        |
 
 ---
 
