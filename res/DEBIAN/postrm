@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+case $1 in
+    purge)
+		rm -rf /root/.config/rustdesk || true
+        ;;
+esac
+
+update-desktop-database /usr/share/applications >/dev/null 2>&1 || true
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+	gtk-update-icon-cache -f /usr/share/icons/hicolor >/dev/null 2>&1 || true
+fi
+
+exit 0

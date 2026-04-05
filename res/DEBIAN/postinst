@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -e
+
+if [ "$1" = configure ]; then
+
+	INITSYS=$(ls -al /proc/1/exe | awk -F' ' '{print $NF}' | awk -F'/' '{print $NF}')
+	rm -f /usr/bin/rustdesk
+	cat >/usr/bin/rustdesk <<'WRAPPER'
+#!/bin/bash
+cd /usr/share/rustdesk || exit 1
+export LD_LIBRARY_PATH=/usr/share/rustdesk:/usr/share/rustdesk/lib:$LD_LIBRARY_PATH
+exec ./rustdesk "$@"
+WRAPPER
+	chmod 755 /usr/bin/rustdesk
+	ln -sf liblibrustdesk.so /usr/share/rustdesk/librustdesk.so
+	if [ -f /usr/share/rustdesk/libsciter-gtk.so ]; then
+		ln -f -s /usr/share/rustdesk/libsciter-gtk.so /usr/bin/libsciter-gtk.so
+	fi
+
+	if [ "systemd" == "$INITSYS" ]; then
+		if [ -e /etc/systemd/system/rustdesk.service ]; then
+			rm /etc/systemd/system/rustdesk.service /usr/lib/systemd/system/rustdesk.service /usr/lib/systemd/user/rustdesk.service >/dev/null 2>&1
+		fi
+		mkdir -p /usr/lib/systemd/system/
+		cp /usr/share/rustdesk/files/systemd/rustdesk.service /usr/lib/systemd/system/rustdesk.service
+		if [ -e /usr/bin/pkill ]; then
+			sed -i "s|pkill|/usr/bin/pkill|g" /usr/lib/systemd/system/rustdesk.service
+		fi
+		systemctl daemon-reload
+		systemctl enable rustdesk
+		systemctl start rustdesk
+	fi
+
+	update-desktop-database /usr/share/applications >/dev/null 2>&1 || true
+	if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+		gtk-update-icon-cache -f /usr/share/icons/hicolor >/dev/null 2>&1 || true
+	fi
+fi

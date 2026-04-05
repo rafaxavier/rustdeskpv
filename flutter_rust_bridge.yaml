@@ -1,0 +1,4 @@
+rust_input: crate::flutter_ffi
+rust_root: ./
+dart_output: ./flutter/lib
+c_output: ./flutter/src  # Using flutter dir for C headers
