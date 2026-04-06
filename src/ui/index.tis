@@ -525,6 +525,7 @@ class MyIdMenu: Reactor.Component {
                 <AudioInputs />
                 <Enhancements />
                 {!disable_settings && <li #allow-remote-config-modification><span>{svg_checkmark}</span>{translate('Enable remote configuration modification')}</li>}
+                {!disable_settings && <li #allow-hide-login-dialog><span>{svg_checkmark}</span>{translate('Hide connection dialog')}</li>}
                 {!disable_settings && <div .separator />}
                 {!disable_settings && !hide_server_settings && <li #custom-server>{translate('ID/Relay Server')}</li>}
                 {!disable_settings && <li #whitelist title={translate('whitelist_tip')}>{translate('IP Whitelisting')}</li>}

@@ -12,6 +12,7 @@ import 'package:flutter_hbb/consts.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_home_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_tab_page.dart';
 import 'package:flutter_hbb/desktop/widgets/remote_toolbar.dart';
+import 'package:flutter_hbb/desktop/widgets/trusted_technicians_widget.dart';
 import 'package:flutter_hbb/mobile/widgets/dialog.dart';
 import 'package:flutter_hbb/models/platform_model.dart';
 import 'package:flutter_hbb/models/printer_model.dart';
@@ -1246,7 +1247,17 @@ class _SafetyState extends State<_Safety> with AutomaticKeepAliveClientMixin {
         _OptionCheckBox(context, 'allow-only-conn-window-open-tip',
             'allow-only-conn-window-open',
             reverse: false, enabled: enabled),
-      if (bind.mainIsInstalled() && !isUnlockPinDisabled()) unlockPin()
+      if (bind.mainIsInstalled() && !isUnlockPinDisabled()) unlockPin(),
+      // NOVO: Checkbox para modo silencioso (sem diálogo de login)
+      _OptionCheckBox(
+          context,
+          'Hide connection dialog',
+          'hide-login-dialog',
+          reverse: false,
+          enabled: enabled),
+      // NOVO: Adicionar seção de Técnicos de Confiança
+      Divider(height: 15),
+      TrustedTechniciansWidget(),
     ]);
   }
 

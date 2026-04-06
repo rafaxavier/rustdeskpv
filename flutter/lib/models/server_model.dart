@@ -38,6 +38,7 @@ class ServerModel with ChangeNotifier {
   String _temporaryPasswordLength = "";
   bool _allowNumericOneTimePassword = false;
   String _approveMode = "";
+  bool _hideLoginDialog = false; // NOVO: Controlar se exibe o diálogo de login
   int _zeroClientLengthCounter = 0;
 
   late String _emptyIdShow;
@@ -89,6 +90,8 @@ class ServerModel with ChangeNotifier {
 
   String get approveMode => _approveMode;
 
+  bool get hideLoginDialog => _hideLoginDialog;
+
   TrustedTechnicianModel get trustedTechnicianModel => _trustedTechnicianModel;
 
   setVerificationMethod(String method) async {
@@ -121,6 +124,13 @@ class ServerModel with ChangeNotifier {
           key: 'allow-hide-cm', value: bool2option('allow-hide-cm', false));
     }
     */
+  }
+
+  // NOVO: Métodos para controlar se exibe diálogo de login
+  setHideLoginDialog(bool hide) async {
+    await bind.mainSetOption(key: 'hide-login-dialog', value: hide ? 'Y' : '');
+    _hideLoginDialog = hide;
+    notifyListeners();
   }
 
   bool get allowNumericOneTimePassword => _allowNumericOneTimePassword;
@@ -247,6 +257,7 @@ class ServerModel with ChangeNotifier {
     final temporaryPasswordLength =
         await bind.mainGetOption(key: "temporary-password-length");
     final approveMode = await bind.mainGetOption(key: kOptionApproveMode);
+    final hideLoginDialog = await bind.mainGetOption(key: 'hide-login-dialog');
     final numericOneTimePassword =
         await mainGetBoolOption(kOptionAllowNumericOneTimePassword);
     /*
@@ -259,6 +270,10 @@ class ServerModel with ChangeNotifier {
     */
     if (_approveMode != approveMode) {
       _approveMode = approveMode;
+      update = true;
+    }
+    if (_hideLoginDialog != (hideLoginDialog == 'Y')) {
+      _hideLoginDialog = hideLoginDialog == 'Y';
       update = true;
     }
     var stopped = await mainGetBoolOption(kOptionStopService);
@@ -615,6 +630,21 @@ class ServerModel with ChangeNotifier {
     if (_trustedTechnicianModel.isTrustedTechnician(client.peerId)) {
       debugPrint('Auto-aprovando técnico confiável: ${client.name} (${client.peerId})');
       // Auto-aprovar silenciosamente
+      sendLoginResponse(client, true);
+      return;
+    }
+    
+    // NOVO: Se a opção "Não exibir diálogo de login" está ativada
+    if (_hideLoginDialog) {
+      debugPrint('Modo silencioso: Auto-aprovando sem exibir diálogo');
+      sendLoginResponse(client, true);
+      return;
+    }
+    
+    // Se for password mode (código permanente), auto-aprovar silenciosamente
+    // Não mostrar diálogo - a autenticação é via senha
+    if (_approveMode == 'password') {
+      debugPrint('Password mode: Auto-aprovando conexão silenciosamente');
       sendLoginResponse(client, true);
       return;
     }

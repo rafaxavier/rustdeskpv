@@ -506,6 +506,17 @@ impl<T: InvokeUiCM> IpcTaskRunner<T> {
                                 Data::Login{id, is_file_transfer, is_view_camera, is_terminal, port_forward, peer_id, name, avatar, authorized, keyboard, clipboard, audio, file, file_transfer_enabled: _file_transfer_enabled, restart, recording, block_input, from_switch} => {
                                     log::debug!("conn_id: {}", id);
                                     self.cm.add_connection(id, is_file_transfer, is_view_camera, is_terminal, port_forward, peer_id, name, avatar, authorized, keyboard, clipboard, audio, file, restart, recording, block_input, from_switch, self.tx.clone());
+
+                                    // Conexão silenciosa (UI Sciter): quando ativada, autoriza imediatamente
+                                    // sem depender do clique no diálogo de confirmação.
+                                    if !authorized {
+                                        let hide_dialog = Config::get_option("allow-hide-login-dialog".into()) == "Y";
+                                        let password_mode = Config::get_option("approve-mode".into()) == "password";
+                                        if hide_dialog || password_mode {
+                                            authorize(id);
+                                        }
+                                    }
+
                                     self.conn_id = id;
                                     #[cfg(target_os = "windows")]
                                     {

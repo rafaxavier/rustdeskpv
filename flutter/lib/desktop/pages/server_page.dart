@@ -1026,8 +1026,21 @@ class _CmControlPanel extends StatelessWidget {
     final showElevation = canElevate &&
         model.showElevation &&
         client.type_() == ClientType.remote;
-    // MODIFICADO: Mostrar checkbox "Lembrar Técnico" SEMPRE (mesmo com código permanente)
-    final showAccept = true; // Antes era: model.approveMode != 'password';
+    // Conexão silenciosa: sem qualquer popup/painel de autorização.
+    final isPasswordMode = model.approveMode == 'password';
+    final shouldSilentApprove = isPasswordMode || model.hideLoginDialog;
+
+    if (shouldSilentApprove) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!client.authorized && !client.disconnected) {
+          model.sendLoginResponse(client, true);
+          windowManager.minimize();
+        }
+      });
+      return Offstage();
+    }
+
+    final showAccept = true;
     
     // Rastreador do checkbox "Lembrar este técnico"
     final rememberTechnician = false.obs;
@@ -1055,26 +1068,29 @@ class _CmControlPanel extends StatelessWidget {
               tooltip: 'accept_and_elevate_btn_tooltip'),
         ),
         // Checkbox "Lembrar este técnico"
-        Obx(() => Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: CheckboxListTile(
-            value: rememberTechnician.value,
-            onChanged: (value) {
-              rememberTechnician.value = value ?? false;
-            },
-            title: Text(
-              translate('Remember this technician'),
-              style: TextStyle(fontSize: 13),
+        Offstage(
+          offstage: false,
+          child: Obx(() => Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: CheckboxListTile(
+              value: rememberTechnician.value,
+              onChanged: (value) {
+                rememberTechnician.value = value ?? false;
+              },
+              title: Text(
+                translate('Remember this technician'),
+                style: TextStyle(fontSize: 13),
+              ),
+              subtitle: Text(
+                translate('Auto-approve this technician on next connection'),
+                style: TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              visualDensity: VisualDensity.compact,
             ),
-            subtitle: Text(
-              translate('Auto-approve this technician on next connection'),
-              style: TextStyle(fontSize: 11, color: Colors.grey),
-            ),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            visualDensity: VisualDensity.compact,
-          ),
-        )),
+          )),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

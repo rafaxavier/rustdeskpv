@@ -351,6 +351,7 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("Security", "Segurança"),
         ("Theme", "Tema"),
         ("Dark Theme", "Tema Escuro"),
+    ("Hide connection dialog", "Ocultar diálogo de conexão"),
         ("Light Theme", "Tema Claro"),
         ("Dark", "Escuro"),
         ("Light", "Claro"),

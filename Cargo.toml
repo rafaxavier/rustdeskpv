@@ -1,6 +1,6 @@
 [package]
 name = "rustdesk"
-version = "1.4.6"
+version = "1.4.8"
 authors = ["rustdesk <info@rustdesk.com>"]
 edition = "2021"
 build= "build.rs"
@@ -234,6 +234,15 @@ os-version = "0.2"
 [dev-dependencies]
 hound = "3.5"
 docopt = "1.1"
+
+[profile.local-fast]
+inherits = "dev"
+opt-level = 1
+debug = 0
+incremental = true
+codegen-units = 256
+lto = false
+panic = "abort"
 
 [package.metadata.bundle]
 name = "RustDesk"

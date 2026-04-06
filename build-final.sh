@@ -14,14 +14,40 @@ cd /home/rxn/projetos/rustdeskpv
 . "$HOME/.cargo/env"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH"
 export CARGO_TARGET_DIR="$HOME/.cache/rustdeskpv-target"
+FEATURES="${BUILD_FEATURES:-linux-pkg-config}"
+
+# Paralelismo explícito para acelerar em máquinas com muitos cores
+JOBS="${BUILD_JOBS:-$(nproc)}"
+export CARGO_BUILD_JOBS="$JOBS"
+
+# Cache de compilação (opcional, acelera recompilações)
+if command -v sccache >/dev/null 2>&1; then
+    export RUSTC_WRAPPER="sccache"
+fi
+
+# Modo final rápido opcional (para testes internos de pacote)
+# Use FAST_FINAL=1 para reduzir bastante o tempo de build do release.
+if [ "${FAST_FINAL:-0}" = "1" ]; then
+    export CARGO_PROFILE_RELEASE_LTO="off"
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS="${RELEASE_CODEGEN_UNITS:-32}"
+fi
+
+echo "⚙️ Jobs paralelos: $JOBS"
+echo "⚙️ Features: ${FEATURES}"
+if [ -n "$RUSTC_WRAPPER" ]; then
+    echo "⚙️ Compiler cache: ${RUSTC_WRAPPER}"
+fi
+if [ "${FAST_FINAL:-0}" = "1" ]; then
+    echo "⚙️ FAST_FINAL=1 (LTO=${CARGO_PROFILE_RELEASE_LTO}, codegen-units=${CARGO_PROFILE_RELEASE_CODEGEN_UNITS})"
+fi
 
 # Compilar binário primeiro
 echo "📦 Compilando binário (modo release)..."
-cargo build --release --features linux-pkg-config
+cargo build --release --bin rustdesk --features "$FEATURES" -j "$JOBS"
 
 # Gerar pacote .deb
 echo "📦 Gerando pacote .deb..."
-cargo deb --profile release --features linux-pkg-config
+cargo deb --profile release --features "$FEATURES" -j "$JOBS"
 
 # Verificar resultado
 DEB_FILE=$(ls -1t "$CARGO_TARGET_DIR/debian/rustdesk_"*.deb 2>/dev/null | head -1)

@@ -120,6 +120,7 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("Secure Connection", "Secure connection"),
         ("Insecure Connection", "Insecure connection"),
         ("Dark Theme", "Dark theme"),
+    ("Hide connection dialog", "Hide connection dialog"),
         ("Light Theme", "Light theme"),
         ("Follow System", "Follow system"),
         ("Unlock Security Settings", "Unlock security settings"),
