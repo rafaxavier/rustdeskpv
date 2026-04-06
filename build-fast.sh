@@ -17,7 +17,7 @@ export CARGO_TARGET_DIR="$HOME/.cache/rustdeskpv-target"
 
 # Compilar
 echo "📦 Compilando binário (modo release)..."
-cargo build --release --features flutter,linux-pkg-config
+cargo build --release --features linux-pkg-config
 
 # Verificar resultado
 if [ -f "$CARGO_TARGET_DIR/release/rustdesk" ]; then

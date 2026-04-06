@@ -1026,7 +1026,8 @@ class _CmControlPanel extends StatelessWidget {
     final showElevation = canElevate &&
         model.showElevation &&
         client.type_() == ClientType.remote;
-    final showAccept = model.approveMode != 'password';
+    // MODIFICADO: Mostrar checkbox "Lembrar Técnico" SEMPRE (mesmo com código permanente)
+    final showAccept = true; // Antes era: model.approveMode != 'password';
     
     // Rastreador do checkbox "Lembrar este técnico"
     final rememberTechnician = false.obs;

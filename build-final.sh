@@ -17,11 +17,11 @@ export CARGO_TARGET_DIR="$HOME/.cache/rustdeskpv-target"
 
 # Compilar binário primeiro
 echo "📦 Compilando binário (modo release)..."
-cargo build --release --features flutter,linux-pkg-config
+cargo build --release --features linux-pkg-config
 
 # Gerar pacote .deb
 echo "📦 Gerando pacote .deb..."
-cargo deb --profile release --features flutter,linux-pkg-config
+cargo deb --profile release --features linux-pkg-config
 
 # Verificar resultado
 DEB_FILE=$(ls -1t "$CARGO_TARGET_DIR/debian/rustdesk_"*.deb 2>/dev/null | head -1)
