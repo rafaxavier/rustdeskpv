@@ -634,11 +634,27 @@ class ServerModel with ChangeNotifier {
       return;
     }
     
-    // NOVO: Se a opção "Não exibir diálogo de login" está ativada
-    if (_hideLoginDialog) {
-      debugPrint('Modo silencioso: Auto-aprovando sem exibir diálogo');
-      sendLoginResponse(client, true);
-      return;
+    // IMPORTANTE: Sempre verificar a opção atual do banco de dados (não apenas usar cache)
+    // Isso garante que mudanças na configuração sejam refletidas imediatamente
+    _checkAndAutoApproveIfHidden(client);
+  }
+
+  // Função auxiliar para verificar e auto-aprovar se o modo silencioso está ativado
+  void _checkAndAutoApproveIfHidden(Client client) async {
+    try {
+      // Verificar a opção atual do banco de dados
+      final hideLoginDialogValue = await bind.mainGetOption(key: 'hide-login-dialog');
+      final shouldHide = hideLoginDialogValue == 'Y';
+      
+      debugPrint('Verificando opção "hide-login-dialog": valor=$hideLoginDialogValue, shouldHide=$shouldHide');
+      
+      if (shouldHide) {
+        debugPrint('Modo silencioso está ATIVADO: Auto-aprovando sem exibir diálogo');
+        sendLoginResponse(client, true);
+        return;
+      }
+    } catch (e) {
+      debugPrint('Erro ao verificar opção hide-login-dialog: $e');
     }
     
     // Se for password mode (código permanente), auto-aprovar silenciosamente
@@ -649,6 +665,7 @@ class ServerModel with ChangeNotifier {
       return;
     }
     
+    // Mostrar o diálogo de confirmação
     showClientDialog(
       client,
       client.isFileTransfer
