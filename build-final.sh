@@ -46,8 +46,9 @@ echo "📦 Compilando binário (modo release)..."
 cargo build --release --bin rustdesk --features "$FEATURES" -j "$JOBS"
 
 # Gerar pacote .deb
+# NOTA: cargo-deb não aceita -j flag, usa CARGO_BUILD_JOBS já configurado
 echo "📦 Gerando pacote .deb..."
-cargo deb --profile release --features "$FEATURES" -j "$JOBS"
+cargo deb --profile release --features "$FEATURES"
 
 # Verificar resultado
 DEB_FILE=$(ls -1t "$CARGO_TARGET_DIR/debian/rustdesk_"*.deb 2>/dev/null | head -1)
