@@ -1,130 +1,187 @@
 #!/bin/bash
+# PREFLIGHT CHECK - Validar e preparar ambiente para build
+# Execute este script ANTES de rodar build-final.sh
+# ./preflight.sh
 
-# Pre-flight checklist for RustDesk compilation
-# Verifies that all prerequisites are met before attempting build
+set -e
 
-echo "🔍 RustDesk Build Pre-flight Checklist"
-echo "======================================"
+echo "🔍 PREFLIGHT CHECK - Validando ambiente para build do RustDesk..."
 echo ""
 
-CHECKS_PASSED=0
-CHECKS_FAILED=0
+# Cores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-check_command() {
-    local cmd=$1
-    local name=$2
+# Contadores
+MISSING=0
+WARNINGS=0
+
+# ==============================================================================
+# Função auxiliar para imprimir status
+# ==============================================================================
+check_status() {
+    local name="$1"
+    local status="$2"
+    local detail="${3:-}"
     
-    if command -v $cmd &> /dev/null; then
-        echo "✅ $name found"
-        ((CHECKS_PASSED++))
-        return 0
+    if [ "$status" = "OK" ]; then
+        echo -e "  ${GREEN}✅${NC} $name"
+    elif [ "$status" = "WARN" ]; then
+        echo -e "  ${YELLOW}⚠️ ${NC} $name: $detail"
+        WARNINGS=$((WARNINGS + 1))
     else
-        echo "❌ $name NOT found"
-        ((CHECKS_FAILED++))
-        return 1
+        echo -e "  ${RED}❌${NC} $name: $detail"
+        MISSING=$((MISSING + 1))
     fi
 }
 
-check_directory() {
-    local dir=$1
-    local name=$2
-    
-    if [ -d "$dir" ]; then
-        echo "✅ $name found at $dir"
-        ((CHECKS_PASSED++))
-        return 0
-    else
-        echo "❌ $name NOT found at $dir"
-        ((CHECKS_FAILED++))
-        return 1
-    fi
-}
-
-check_package() {
-    local pkg=$1
-    local name=$2
-    
-    if dpkg -l | grep -q "^ii.*$pkg"; then
-        echo "✅ System package $name installed"
-        ((CHECKS_PASSED++))
-        return 0
-    else
-        echo "⚠️  System package $name NOT installed (will be needed)"
-        ((CHECKS_FAILED++))
-        return 1
-    fi
-}
-
-# Check Rust
-echo "Checking Rust toolchain..."
-check_command rustc "Rust compiler"
-check_command cargo "Cargo package manager"
-
-# Get Rust version
-RUST_VERSION=$(rustc --version 2>/dev/null)
-echo "   Version: $RUST_VERSION"
-echo ""
-
-# Check Flutter
-echo "Checking Flutter SDK..."
-if [ -d "/home/dodo/flutter" ]; then
-    echo "✅ Flutter SDK found at /home/dodo/flutter"
-    ((CHECKS_PASSED++))
-    if command -v flutter &> /dev/null; then
-        FLUTTER_VERSION=$(flutter --version 2>&1 | head -1)
-        echo "   Version: $FLUTTER_VERSION"
-    fi
+# ==============================================================================
+# 1. VERIFICAR RUST
+# ==============================================================================
+echo "📦 Verificando Rust..."
+if command -v rustc >/dev/null 2>&1; then
+    RUST_VERSION=$(rustc --version)
+    check_status "Rust" "OK" 
+    echo "      $RUST_VERSION"
 else
-    echo "⚠️  Flutter SDK not in PATH but may be available"
+    check_status "Rust" "FAIL" "não instalado"
 fi
-echo ""
 
-# Check VCPKG
-echo "Checking VCPKG..."
-check_directory "/home/dodo/vcpkg" "VCPKG"
-echo ""
-
-# Check system packages
-echo "Checking system packages..."
-check_package "libxcb-randr0-dev" "libxcb-randr0-dev"
-check_package "libxcb-dev" "libxcb-dev"
-check_package "libx11-dev" "libx11-dev"
-check_package "libgtk-3-dev" "libgtk-3-dev"
-echo ""
-
-# Check disk space
-echo "Checking disk space..."
-DISK_FREE=$(df -BG /home/dodo/Downloads/rustdesk | awk 'NR==2 {print $4}' | sed 's/G//')
-if [ "$DISK_FREE" -gt 20 ]; then
-    echo "✅ Free disk space: ${DISK_FREE}GB (needed: 20GB)"
-    ((CHECKS_PASSED++))
+if command -v cargo >/dev/null 2>&1; then
+    check_status "Cargo" "OK"
 else
-    echo "❌ Low disk space: ${DISK_FREE}GB (needed: 20GB)"
-    ((CHECKS_FAILED++))
+    check_status "Cargo" "FAIL" "não instalado"
 fi
+
 echo ""
 
-# Summary
-echo "======================================"
-echo "Summary:"
-echo "  ✅ Passed: $CHECKS_PASSED"
-echo "  ❌ Failed: $CHECKS_FAILED"
+# ==============================================================================
+# 2. VERIFICAR DEPENDÊNCIAS DO SISTEMA
+# ==============================================================================
+echo "🔧 Verificando dependências do sistema..."
+
+DEPS_REQUIRED=(
+    "build-essential:gcc"
+    "pkg-config:pkg-config"
+    "libgtk-3-dev:gtk-3"
+    "libssl-dev:openssl"
+    "libxcb-randr0-dev:xcb-randr"
+    "libxfixes-dev:xfixes"
+    "libxcb-shape0-dev:xcb-shape"
+    "libxcb-xfixes0-dev:xcb-xfixes"
+    "libasound2-dev:asound"
+)
+
+MISSING_PACKAGES=()
+
+for dep_entry in "${DEPS_REQUIRED[@]}"; do
+    IFS=':' read -r package binary <<< "$dep_entry"
+    
+    if command -v "$binary" >/dev/null 2>&1 || dpkg -l | grep -q "^ii  $package"; then
+        check_status "$package" "OK"
+    else
+        check_status "$package" "FAIL" "não instalado"
+        MISSING_PACKAGES+=("$package")
+    fi
+done
+
 echo ""
 
-if [ $CHECKS_FAILED -eq 0 ]; then
-    echo "🎉 All checks passed! Ready to compile."
+# ==============================================================================
+# 3. VERIFICAR FERRAMENTAS OPCIONAIS
+# ==============================================================================
+echo "🛠️  Verificando ferramentas opcionais..."
+
+if command -v wget >/dev/null 2>&1; then
+    check_status "wget" "OK"
+else
+    check_status "wget" "WARN" "necessário para baixar assets"
+    MISSING_PACKAGES+=("wget")
+fi
+
+if command -v convert >/dev/null 2>&1; then
+    check_status "ImageMagick" "OK"
+else
+    check_status "ImageMagick" "WARN" "opcional (gera ícones melhorados)"
+fi
+
+echo ""
+
+# ==============================================================================
+# 4. VERIFICAR PERMISSÕES E DIRETÓRIOS
+# ==============================================================================
+echo "📁 Verificando permissões e diretórios..."
+
+if [ -w "$(pwd)" ]; then
+    check_status "Permissão de escrita (repo)" "OK"
+else
+    check_status "Permissão de escrita (repo)" "FAIL" "sem permissão"
+fi
+
+if [ -d "$HOME/.cargo" ]; then
+    check_status "Diretório Cargo" "OK"
+else
+    check_status "Diretório Cargo" "WARN" "será criado durante build"
+fi
+
+echo ""
+
+# ==============================================================================
+# 5. INSTALAR DEPENDÊNCIAS FALTANDO (se necessário)
+# ==============================================================================
+if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
+    echo "📥 Pacotes faltando: ${MISSING_PACKAGES[*]}"
     echo ""
-    echo "Next step: bash build.sh"
+    echo "Deseja instalar automaticamente? (requer sudo)"
+    read -p "Instalar agora? (s/n): " -n 1 -r
+    echo
+    
+    if [[ $REPLY =~ ^[Ss]$ ]]; then
+        echo "🔐 Instalando pacotes com apt-get..."
+        echo ""
+        sudo apt-get update
+        sudo apt-get install -y "${MISSING_PACKAGES[@]}"
+        echo ""
+        echo "✅ Pacotes instalados com sucesso"
+    else
+        echo "⚠️  Pulando instalação. Você pode instalar manualmente depois com:"
+        echo "   sudo apt-get install -y ${MISSING_PACKAGES[*]}"
+        WARNINGS=$((WARNINGS + 1))
+    fi
+    echo ""
+fi
+
+# ==============================================================================
+# 6. RESUMO FINAL
+# ==============================================================================
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📊 RESUMO DO PREFLIGHT CHECK"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if [ "$MISSING" -eq 0 ]; then
+    echo -e "${GREEN}✅ AMBIENTE PRONTO PARA BUILD!${NC}"
+    echo ""
+    echo "Próximo passo:"
+    echo "  ./build-final.sh"
+    echo ""
     exit 0
 else
-    echo "⚠️  Some checks failed. Please address above issues."
+    echo -e "${RED}❌ AMBIENTE COM PROBLEMAS${NC}"
     echo ""
-    if ! dpkg -l | grep -q "^ii.*libxcb-randr0-dev"; then
-        echo "Quick fix - install missing packages:"
-        echo "  sudo apt-get update"
-        echo "  sudo apt-get install -y libxcb-randr0-dev libxcb-dev libx11-dev libgtk-3-dev libpulse-dev"
+    echo "Problemas encontrados: $MISSING"
+    echo "Avisos: $WARNINGS"
+    echo ""
+    echo "Resolva os problemas acima e tente novamente."
+    echo ""
+    
+    if [ "$MISSING" -gt 0 ]; then
+        echo "PROBLEMAS CRÍTICOS (impedem build):"
+        echo "  - Instale as dependências faltando com apt-get"
+        echo "  - Ou instale Rust com: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
         echo ""
     fi
-    echo "Then try again: bash preflight.sh"
+    
     exit 1
 fi

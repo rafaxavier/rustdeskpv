@@ -270,7 +270,8 @@ assets = [
     ["res/128x128.png", "usr/share/pixmaps/rustdesk.png", "644"],
     ["res/rustdesk.service", "usr/share/rustdesk/files/systemd/rustdesk.service", "644"],
     ["target/release/liblibrustdesk.so", "usr/share/rustdesk/", "755"],
-    ["flutter/build/linux/x64/release/bundle/lib/**/*", "usr/share/rustdesk/lib/", "755"],
+    # TODO: Descomente quando Flutter estiver compilado para Linux:
+    # ["flutter/build/linux/x64/release/bundle/lib/**/*", "usr/share/rustdesk/lib/", "755"],
 ]
 
 #https://github.com/johnthagen/min-sized-rust

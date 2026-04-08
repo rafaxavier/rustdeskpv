@@ -24,7 +24,32 @@ Uma **versão otimizada do RustDesk** com feature **"Trusted Technicians"** que 
 
 ## 🚀 Início Rápido (5 min)
 
-### Pré-requisitos
+### ⚡ Build Automatizado (RECOMENDADO)
+
+Para build totalmente automatizado com validação de dependências:
+
+```bash
+git clone --recurse-submodules https://github.com/rafaxavier/rustdeskpv
+cd rustdeskpv
+
+# 1. Validar ambiente (instala dependências faltando automaticamente)
+./preflight.sh
+
+# 2. Compilar e gerar .deb
+./build-final.sh
+
+# 3. Instalar
+sudo dpkg -i ~/.cache/rustdeskpv-target/debian/rustdesk_*.deb
+rustdesk
+```
+
+**Tempo**: ~30 min (primeira vez), 5-10 min (rebuilds)
+
+📖 **Documentação completa**: Veja [`QUICK_START_BUILD.md`](QUICK_START_BUILD.md) ou [`BUILD_GUIDE.md`](BUILD_GUIDE.md)
+
+---
+
+### Pré-requisitos (se preferir manual)
 
 ```bash
 # Ubuntu/Debian
