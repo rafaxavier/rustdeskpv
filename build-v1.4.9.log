@@ -1,0 +1,460 @@
+=========================================
+📦 Build RustDesk PV
+=========================================
+Versão atual: 1.4.8
+Nova versão: 1.4.9
+=========================================
+[master a23d9355f] chore: versão 1.4.9
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+🔨 Compilando...
+    Updating crates.io index
+warning: direct cast of function item into an integer
+  --> libs/hbb_common/src/platform/mod.rs:80:62
+   |
+80 |         libc::signal(libc::SIGSEGV, breakdown_signal_handler as _);
+   |                                                              ^^^^
+   |
+   = note: `#[warn(function_casts_as_integer)]` on by default
+help: first cast to a pointer `as *const ()`
+   |
+80 |         libc::signal(libc::SIGSEGV, breakdown_signal_handler as *const () as _);
+   |                                                              ++++++++++++
+
+warning: `hbb_common` (lib) generated 1 warning (run `cargo fix --lib -p hbb_common` to apply 1 suggestion)
+warning: type `useconds_t` should have an upper camel case name
+  --> libs/libxdo-sys-stub/src/lib.rs:31:10
+   |
+31 | pub type useconds_t = c_uint;
+   |          ^^^^^^^^^^ help: convert the identifier to upper camel case: `UsecondsT`
+   |
+   = note: `#[warn(non_camel_case_types)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `libxdo-sys` (lib) generated 1 warning
+warning: `hbb_common` (lib) generated 1 warning (1 duplicate)
+   Compiling rustdesk v1.4.9 (/home/rxn/projetos/rustdeskpv)
+warning: unused import: `tokio`
+  --> libs/scrap/src/wayland/pipewire.rs:26:69
+   |
+26 | use hbb_common::{bail, config, platform::linux::CMD_SH, serde_json, tokio, ResultType};
+   |                                                                     ^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `available_source_types` is never used
+  --> libs/scrap/src/wayland/screencast_portal.rs:26:8
+   |
+ 8 | pub trait OrgFreedesktopPortalScreenCast {
+   |           ------------------------------ method in this trait
+...
+26 |     fn available_source_types(&self) -> Result<u32, dbus::Error>;
+   |        ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: trait `OrgFreedesktopPortalRequest` is never used
+ --> libs/scrap/src/wayland/request_portal.rs:8:11
+  |
+8 | pub trait OrgFreedesktopPortalRequest {
+  |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `2` is never read
+ --> libs/scrap/src/common/wayland.rs:9:49
+  |
+9 | pub struct Capturer(Display, Box<dyn Recorder>, Vec<u8>);
+  |            -------- field in this struct        ^^^^^^^
+  |
+  = help: consider removing this field
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> libs/scrap/src/wayland/capturable.rs:27:16
+   |
+27 |     fn capture(&mut self, timeout_ms: u64) -> Result<PixelProvider, Box<dyn Error>>;
+   |                ^^^^^^^^^ the lifetime is elided here ^^^^^^^^^^^^^ the same lifetime is hidden here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+   = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: use `'_` for type paths
+   |
+27 |     fn capture(&mut self, timeout_ms: u64) -> Result<PixelProvider<'_>, Box<dyn Error>>;
+   |                                                                   ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> libs/scrap/src/wayland/pipewire.rs:349:16
+    |
+349 |     fn capture(&mut self, timeout_ms: u64) -> Result<PixelProvider, Box<dyn Error>> {
+    |                ^^^^^^^^^ the lifetime is elided here ^^^^^^^^^^^^^ the same lifetime is hidden here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+349 |     fn capture(&mut self, timeout_ms: u64) -> Result<PixelProvider<'_>, Box<dyn Error>> {
+    |                                                                   ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> libs/scrap/src/wayland/pipewire.rs:501:25
+    |
+501 | pub fn get_portal(conn: &SyncConnection) -> Proxy<&SyncConnection> {
+    |                         ^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^^^^^
+    |                         |                   |     |
+    |                         |                   |     the same lifetime is elided here
+    |                         |                   the same lifetime is hidden here
+    |                         the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+501 | pub fn get_portal(conn: &SyncConnection) -> Proxy<'_, &SyncConnection> {
+    |                                                   +++
+
+warning: `scrap` (lib) generated 7 warnings (run `cargo fix --lib -p scrap` to apply 4 suggestions)
+warning: unused import: `anyhow`
+ --> src/server/wayland.rs:2:29
+  |
+2 | use hbb_common::{allow_err, anyhow, platform::linux::DISTRO};
+  |                             ^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `crate::clipboard_file::*`
+ --> src/server/connection.rs:7:5
+  |
+7 | use crate::clipboard_file::*;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `is_installed`
+  --> src/common.rs:42:69
+   |
+42 |     ui_interface::{get_api_server as ui_get_api_server, get_option, is_installed, set_option},
+   |                                                                     ^^^^^^^^^^^^
+
+warning: unused import: `self`
+  --> src/ipc.rs:28:16
+   |
+28 |         keys::{self, OPTION_ALLOW_WEBSOCKET},
+   |                ^^^^
+
+warning: use of deprecated function `hbb_common::whoami::hostname`: use `fallible::hostname()` instead
+    --> src/platform/linux.rs:1622:47
+     |
+1622 |                 .replace(&hbb_common::whoami::hostname(), "")
+     |                                               ^^^^^^^^
+     |
+     = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `hbb_common::base64::encode`: Use Engine::encode
+   --> src/hbbs_http/sync.rs:187:52
+    |
+187 |                         hash = hbb_common::base64::encode(&res[..]);
+    |                                                    ^^^^^^
+
+warning: unused variable: `is_press`
+   --> src/keyboard.rs:500:17
+    |
+500 |             let is_press = matches!(event.event_type, EventType::KeyPress(_));
+    |                 ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_is_press`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `password`
+   --> src/platform/linux_desktop_manager.rs:384:9
+    |
+384 |         password: String,
+    |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_password`
+
+warning: value assigned to `synced` is never read
+   --> src/server.rs:765:37
+    |
+765 | ...                   synced = true;
+    |                       ^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+  --> src/tray.rs:54:9
+   |
+54 |     let mut event_loop = EventLoopBuilder::new().build();
+   |         ----^^^^^^^^^^
+   |         |
+   |         help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: value captured by `_tray_icon` is never read
+   --> src/tray.rs:153:29
+    |
+153 |                 Ok(tray) => _tray_icon = Arc::new(Mutex::new(Some(tray))),
+    |                             ^^^^^^^^^^
+    |
+    = help: did you mean to capture by reference instead?
+
+warning: value assigned to `_tray_icon` is never read
+   --> src/tray.rs:153:29
+    |
+153 |                 Ok(tray) => _tray_icon = Arc::new(Mutex::new(Some(tray))),
+    |                             ^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: variable does not need to be mutable
+   --> src/privacy_mode.rs:140:13
+    |
+140 |         let mut map: HashMap<&'static str, PrivacyModeCreator> = HashMap::new();
+    |             ----^^^
+    |             |
+    |             help: remove this `mut`
+
+warning: function `is_opensuse` is never used
+   --> src/platform/linux.rs:947:4
+    |
+947 | fn is_opensuse() -> bool {
+    |    ^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `0` is never read
+    --> src/platform/linux.rs:1857:21
+     |
+1857 | pub struct WakeLock(Option<keepawake::AwakeHandle>);
+     |            -------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |            |
+     |            field in this struct
+     |
+     = help: consider removing this field
+
+warning: function `pam_get_service_name` is never used
+   --> src/platform/linux_desktop_manager.rs:739:4
+    |
+739 | fn pam_get_service_name() -> String {
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: variants `Side`, `Extra`, `Back`, `Forward`, and `Task` are never constructed
+    --> src/server/uinput.rs:1068:9
+     |
+1065 |     pub enum MouseButton {
+     |              ----------- variants in this enum
+...
+1068 |         Side,
+     |         ^^^^
+1069 |         Extra,
+     |         ^^^^^
+1070 |         Right,
+1071 |         Back,
+     |         ^^^^
+1072 |         Forward,
+     |         ^^^^^^^
+1073 |         Task,
+     |         ^^^^
+     |
+     = note: `MouseButton` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: variants `Right` and `Left` are never constructed
+    --> src/server/uinput.rs:1080:9
+     |
+1077 |     pub enum ScrollDirection {
+     |              --------------- variants in this enum
+...
+1080 |         Right,
+     |         ^^^^^
+1081 |         Left,
+     |         ^^^^
+     |
+     = note: `ScrollDirection` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: field `resolution` is never read
+   --> src/server/rdp_input.rs:296:9
+    |
+292 |     pub struct RdpInputMouse {
+    |                ------------- field in this struct
+...
+296 |         resolution: (usize, usize),
+    |         ^^^^^^^^^^
+
+warning: constant `MOUSE_MOVE_PROTECTION_TIMEOUT` is never used
+   --> src/server/input_service.rs:487:7
+    |
+487 | const MOUSE_MOVE_PROTECTION_TIMEOUT: Duration = Duration::from_millis(1_000);
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `MOUSE_ACTIVE_DISTANCE` is never used
+   --> src/server/input_service.rs:489:7
+    |
+489 | const MOUSE_ACTIVE_DISTANCE: i32 = 5;
+    |       ^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `enable_file_transfer` is never read
+   --> src/server/connection.rs:262:5
+    |
+220 | pub struct Connection {
+    |            ---------- field in this struct
+...
+262 |     enable_file_transfer: bool,
+    |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `is_capturer_mag_supported` is never used
+   --> src/server/display_service.rs:155:4
+    |
+155 | fn is_capturer_mag_supported() -> bool {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `read_empty_dirs`, `set_confirm_override_file`, and `rename_file` are never used
+   --> src/client/file_trait.rs:58:8
+    |
+  5 | pub trait FileManager: Interface {
+    |           ----------- methods in this trait
+...
+ 58 |     fn read_empty_dirs(&self, path: String, include_hidden: bool) {
+    |        ^^^^^^^^^^^^^^^
+...
+168 |     fn set_confirm_override_file(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+190 |     fn rename_file(&self, act_id: i32, path: String, new_name: String, is_remote: bool) {
+    |        ^^^^^^^^^^^
+
+warning: function `query_online_states` is never used
+    --> src/client.rs:3959:18
+     |
+3959 |     pub async fn query_online_states<F: FnOnce(Vec<String>, Vec<String>)>(ids: Vec<String>, f: F) {
+     |                  ^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_online_stream` is never used
+    --> src/client.rs:3979:14
+     |
+3979 |     async fn create_online_stream() -> ResultType<Stream> {
+     |              ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `query_online_states_` is never used
+    --> src/client.rs:3994:14
+     |
+3994 |     async fn query_online_states_(
+     |              ^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `http_request` and `get_http_status` are never used
+   --> src/ui.rs:609:8
+    |
+198 | impl UI {
+    | ------- methods in this implementation
+...
+609 |     fn http_request(&self, url: String, method: String, body: Option<String>, header: String) {
+    |        ^^^^^^^^^^^^
+...
+625 |     fn get_http_status(&self, url: String) -> Option<String> {
+    |        ^^^^^^^^^^^^^^^
+
+warning: methods `into_string` and `save` are never used
+   --> src/auth_2fa.rs:123:8
+    |
+122 | impl TelegramBot {
+    | ---------------- methods in this implementation
+123 |     fn into_string(&self) -> ResultType<String> {
+    |        ^^^^^^^^^^^
+...
+133 |     fn save(&self) -> ResultType<()> {
+    |        ^^^^
+
+warning: function `get_chatid_telegram` is never used
+   --> src/auth_2fa.rs:165:8
+    |
+165 | pub fn get_chatid_telegram(bot_token: &str) -> ResultType<Option<String>> {
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `update_controlling_session_count` is never used
+  --> src/updater.rs:27:8
+   |
+27 | pub fn update_controlling_session_count(count: usize) {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `http_request` is never used
+   --> src/ui_interface.rs:859:8
+    |
+859 | pub fn http_request(url: String, method: String, body: Option<String>, header: String) {
+    |        ^^^^^^^^^^^^
+
+warning: function `get_async_http_status` is never used
+   --> src/ui_interface.rs:879:8
+    |
+879 | pub fn get_async_http_status(url: String) -> Option<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `has_valid_bot` is never used
+    --> src/ui_interface.rs:1526:8
+     |
+1526 | pub fn has_valid_bot() -> bool {
+     |        ^^^^^^^^^^^^^
+
+warning: function `verify_bot` is never used
+    --> src/ui_interface.rs:1530:8
+     |
+1530 | pub fn verify_bot(token: String) -> String {
+     |        ^^^^^^^^^^
+
+warning: enum `HbbHttpResponse` is never used
+  --> src/hbbs_http.rs:17:10
+   |
+17 | pub enum HbbHttpResponse<T> {
+   |          ^^^^^^^^^^^^^^^
+
+warning: associated function `parse` is never used
+  --> src/hbbs_http.rs:25:12
+   |
+24 | impl<T: DeserializeOwned> HbbHttpResponse<T> {
+   | -------------------------------------------- associated function in this implementation
+25 |     pub fn parse(body: &str) -> ResultType<Self> {
+   |            ^^^^^
+
+warning: struct `DownloadData` is never constructed
+  --> src/hbbs_http/downloader.rs:26:12
+   |
+26 | pub struct DownloadData {
+   |            ^^^^^^^^^^^^
+
+warning: struct `Downloader` is never constructed
+  --> src/hbbs_http/downloader.rs:38:8
+   |
+38 | struct Downloader {
+   |        ^^^^^^^^^^
+
+warning: function `download_file` is never used
+  --> src/hbbs_http/downloader.rs:50:8
+   |
+50 | pub fn download_file(
+   |        ^^^^^^^^^^^^^
+
+warning: function `do_download` is never used
+   --> src/hbbs_http/downloader.rs:163:10
+    |
+163 | async fn do_download(
+    |          ^^^^^^^^^^^
+
+warning: function `get_download_data` is never used
+   --> src/hbbs_http/downloader.rs:274:8
+    |
+274 | pub fn get_download_data(id: &str) -> ResultType<DownloadData> {
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `cancel` is never used
+   --> src/hbbs_http/downloader.rs:299:8
+    |
+299 | pub fn cancel(id: &str) {
+    |        ^^^^^^
+
+warning: function `remove` is never used
+   --> src/hbbs_http/downloader.rs:307:8
+    |
+307 | pub fn remove(id: &str) {
+    |        ^^^^^^
+
+warning: function `create_http_client_async_with_url` is never used
+   --> src/hbbs_http/http_client.rs:232:14
+    |
+232 | pub async fn create_http_client_async_with_url(url: &str) -> AsyncClient {
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_http_client_async_with_url_` is never used
+   --> src/hbbs_http/http_client.rs:251:10
+    |
+251 | async fn create_http_client_async_with_url_(
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+

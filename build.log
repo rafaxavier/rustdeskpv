@@ -1,0 +1,84 @@
+nohup: ignorando entrada
+🚀 Iniciando BUILD DEFINITIVO para distribuição...
+
+⚙️ Jobs paralelos: 24
+⚙️ Features: linux-pkg-config
+📦 Compilando binário (modo release)...
+   Compiling openssl-sys v0.9.104
+   Compiling zstd-sys v2.0.11+zstd.1.5.6
+   Compiling libgit2-sys v0.14.2+1.5.1
+   Compiling x11rb-protocol v0.13.1
+   Compiling libsodium-sys v0.2.7
+   Compiling zbus v3.15.2
+   Compiling gtk v0.18.1
+   Compiling dbus v0.9.7
+   Compiling tiny-skia v0.11.4
+   Compiling x11-dl v2.21.0
+   Compiling clap_builder v4.5.53
+   Compiling image v0.24.9
+   Compiling gstreamer-video v0.16.7
+   Compiling scrap v0.5.0 (/home/rxn/projetos/rustdeskpv/libs/scrap)
+   Compiling rust-ini v0.18.0
+   Compiling hyper-rustls v0.27.7
+   Compiling nix v0.23.2
+   Compiling nix v0.25.1
+   Compiling dasp_slice v0.11.0
+   Compiling num-bigint v0.4.6
+   Compiling gdkwayland-sys v0.18.0
+   Compiling serde_urlencoded v0.7.1
+   Compiling xkbcommon-dl v0.4.2
+   Compiling event-listener v3.1.0
+   Compiling wayland-protocols-plasma v0.3.3
+   Compiling png v0.18.1
+   Compiling dashmap v6.1.0
+   Compiling enquote v1.1.0
+   Compiling filedescriptor v0.8.2 (https://github.com/rustdesk-org/wezterm?branch=rustdesk%2Fpty_based_0.8.1#80174f80)
+   Compiling auto_impl v1.3.0
+   Compiling rtoolbox v0.0.2
+   Compiling num_cpus v1.16.0
+   Compiling instant v0.1.13
+   Compiling smol_str v0.2.2
+   Compiling qrcodegen v1.8.0
+   Compiling urlencoding v2.1.3
+   Compiling constant_time_eq v0.2.6
+   Compiling base32 v0.4.0
+   Compiling shell-words v1.1.0
+   Compiling constant_time_eq v0.1.5
+   Compiling debug-helper v0.3.13
+   Compiling kcp-sys v0.1.0 (https://github.com/rustdesk-org/kcp-sys#32a6c09f)
+   Compiling totp-rs v5.5.1
+   Compiling sctk-adwaita v0.10.1
+   Compiling cidr-utils v0.5.11
+   Compiling rpassword v7.3.1
+   Compiling wallpaper v3.2.0 (https://github.com/rustdesk-org/wallpaper.rs#ce4a0cd3)
+   Compiling dasp v0.11.0
+   Compiling async-process v1.8.1
+   Compiling clap v4.5.53
+   Compiling dbus-crossroads v0.5.2
+   Compiling libpulse-simple-binding v2.28.1
+   Compiling fontdb v0.23.0
+   Compiling terminfo v0.8.0
+   Compiling nix v0.29.0
+   Compiling portable-pty v0.8.1 (https://github.com/rustdesk-org/wezterm?branch=rustdesk%2Fpty_based_0.8.1#80174f80)
+   Compiling evdev v0.11.5 (https://github.com/rustdesk-org/evdev#cec616e3)
+   Compiling magnum-opus v0.4.0 (https://github.com/rustdesk-org/magnum-opus#5cd2bf98)
+   Compiling stunclient v0.4.1
+   Compiling rust-pulsectl v0.2.12 (https://github.com/rustdesk-org/pulsectl#aa34dde4)
+   Compiling fon v0.6.0
+   Compiling qrcode-generator v4.1.9
+   Compiling parity-tokio-ipc v0.7.3-5 (https://github.com/rustdesk-org/parity-tokio-ipc#c8c8bbcb)
+   Compiling ctrlc v3.4.4
+   Compiling sciter-rs v0.5.57 (https://github.com/rustdesk-org/rust-sciter?branch=dyn#5322f3a7)
+   Compiling repng v0.2.2
+   Compiling default-net v0.14.1
+   Compiling errno v0.3.14
+   Compiling termios v0.3.3
+   Compiling wol-rs v1.0.1
+   Compiling shutdown_hooks v0.1.0
+   Compiling sys-locale v0.3.1
+   Compiling system_shutdown v4.0.1
+   Compiling git2 v0.16.1
+   Compiling shadow-rs v0.21.0
+   Compiling keepawake v0.4.3 (https://github.com/rustdesk-org/keepawake-rs#64d56858)
+   Compiling x11rb v0.13.1
+build-final.sh, linha 46: 828673 Morto                   cargo build --release --bin rustdesk --features "$FEATURES" -j "$JOBS"
