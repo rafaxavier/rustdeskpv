@@ -4856,6 +4856,11 @@ async fn start_ipc(
         #[cfg(target_os = "linux")]
         let mut user = None;
 
+        // CRITICAL: If hide_cm is enabled (allow-hide-login-dialog='Y'), prevent CM UI entirely
+        if password::hide_cm() {
+            log::info!("Connection Manager UI is hidden by configuration (allow-hide-login-dialog=Y)");
+            args = vec!["--cm-no-ui"];
+        }
         // Cm run as user, wait until desktop session is ready.
         #[cfg(target_os = "linux")]
         if crate::platform::is_headless_allowed() && linux_desktop_manager::is_headless() {

@@ -86,9 +86,13 @@ pub fn approve_mode() -> ApproveMode {
 }
 
 pub fn hide_cm() -> bool {
-    approve_mode() == ApproveMode::Password
+    let hide_login_dialog = Config::get_option("allow-hide-login-dialog") == "Y";
+    let hide_cm_by_security_rules = approve_mode() == ApproveMode::Password
         && verification_method() == VerificationMethod::OnlyUsePermanentPassword
-        && crate::config::option2bool("allow-hide-cm", &Config::get_option("allow-hide-cm"))
+        && crate::config::option2bool("allow-hide-cm", &Config::get_option("allow-hide-cm"));
+
+    // When the user explicitly enables "Hide connection dialog", ensure CM starts hidden.
+    hide_login_dialog || hide_cm_by_security_rules
 }
 
 const VERSION_LEN: usize = 2;

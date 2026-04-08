@@ -13,6 +13,13 @@ function setWindowState(state) {
     view.windowState = state;
 }
 
+function is_silent_approve_enabled() {
+    if (hide_cm == undefined) hide_cm = handler.hide_cm();
+    if (hide_cm) return true;
+    return handler.get_option('allow-hide-login-dialog') == 'Y'
+        || handler.get_option('approve-mode') == 'password';
+}
+
 class Body: Reactor.Component
 {
     this var cur = 0;
@@ -36,17 +43,19 @@ class Body: Reactor.Component
         };
         var right_style = show_chat ? "" : "display: none";
         var disconnected = c.disconnected;
-        var hide_login_dialog = handler.get_option('allow-hide-login-dialog') == 'Y';
-        var silent_approve = hide_login_dialog || handler.get_option('approve-mode') == 'password';
+    var silent_approve = is_silent_approve_enabled();
 
         if (!auth && !disconnected && silent_approve) {
             c.authorized = true;
             auth = true;
-            // Auto-aprovar silenciosamente, sem renderizar diálogo
+            // Auto-aprovar silenciosamente sem NENHUMA renderização
+            // 1. Minimiza janela IMEDIATAMENTE (antes de qualquer render)
+            setWindowState(View.WINDOW_MINIMIZED);
+            // 2. Aprova a conexão
             self.timer(10ms, function() {
                 handler.authorize(c.id);
             });
-            // Retorna vazio para não renderizar nada
+            // 3. Retorna vazio para não renderizar conteúdo nenhum
             return "";
         }
 
@@ -369,6 +378,11 @@ function update() {
 }
 
 function bring_to_top(idx=-1) {
+    if (is_silent_approve_enabled()) {
+        if (idx >= 0) body.cur = idx;
+        return;
+    }
+
     if (view.windowState == View.WINDOW_HIDDEN || view.windowState == View.WINDOW_MINIMIZED) {
         if (is_linux) {
             view.focus = self;
@@ -398,6 +412,7 @@ handler.addConnection = function(id, is_file_transfer, is_view_camera, is_termin
         if (c.disconnected && c.peer_id == peer_id) idx = i;
     });
     if (!name) name = "NA";
+    var silent_approve = is_silent_approve_enabled();
     conn = {
         id: id, is_file_transfer: is_file_transfer, is_view_camera: is_view_camera, is_terminal: is_terminal, peer_id: peer_id,
         port_forward: port_forward,
@@ -415,10 +430,17 @@ handler.addConnection = function(id, is_file_transfer, is_view_camera, is_termin
         connections[idx] = conn;
         body.cur = idx;
     }
-    bring_to_top();
+
+    if (silent_approve && !authorized) {
+        conn.authorized = true;
+    }
+
+    if (!silent_approve) {
+        bring_to_top();
+    }
     update();
     self.timer(1ms, adjustHeader);
-    if (authorized) {
+    if (authorized && !silent_approve) {
         self.timer(3s, function() {
             setWindowState(View.WINDOW_MINIMIZED);
         });
@@ -474,6 +496,12 @@ view << event statechange {
 
 function self.ready() {
     adjustBorder();
+
+    if (is_silent_approve_enabled()) {
+        view.windowState = View.WINDOW_HIDDEN;
+        return;
+    }
+
     var (sw, sh) = view.screenBox(#workarea, #dimension);
     var w = scaleIt(300);
     var h = scaleIt(400);
