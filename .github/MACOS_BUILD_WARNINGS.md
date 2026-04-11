@@ -39,6 +39,7 @@ Modificar `build.py` para adicionar flags de compilação que suprimem esses war
 ### ✅ **Abordagem 2: Atualizar o código para APIs modernas**
 
 Substituir as APIs deprecadas por suas alternativas modernas:
+
 - `AuthorizationExecuteWithPrivileges` → `AuthorizationCopyRights` + `AuthorizationExecuteWithFlags`
 - `CGDisplayModeCopyPixelEncoding` → APIs modernas de display
 
@@ -52,4 +53,3 @@ Como você está focado no **Ubuntu/Linux** e o build funciona perfeitamente aí
 
 1. **Curto prazo**: Suprimir os warnings no workflow (Abordagem 1)
 2. **Longo prazo**: Contribuir com atualizações de API ao upstream RustDesk
-
